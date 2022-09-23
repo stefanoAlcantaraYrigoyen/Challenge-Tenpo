@@ -43,7 +43,9 @@ public class CalculatorServiceImplTest {
         double a = 10.0;
         double b = 20.0;
         ExternalPorcentage porcentage = new ExternalPorcentage(10D);
-        ResultCalculatorDTO expectedResult = new ResultCalculatorDTO((a + b) * (porcentage.getPorcentage() / 100));
+        Double sum = a + b;
+        Double porcent = (a + b) * (porcentage.getPorcentage() / 100);
+        ResultCalculatorDTO expectedResult = new ResultCalculatorDTO(sum + porcent);
         when(expRepository.findTopByOrderByIdDesc()).thenReturn(porcentage);
         
         // Act
