@@ -1,11 +1,13 @@
 package com.challange.tenpo.services;
 
 import com.challange.tenpo.dtos.ResultCalculatorDTO;
+import com.challange.tenpo.entitys.ExternalPorcentage;
 import com.challange.tenpo.exceptions.NotPorcentageApiExcenption;
 import com.challange.tenpo.repositories.ExternalPorcentageRepository;
 import com.challange.tenpo.services.impl.CalculatorServiceImpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
@@ -38,12 +40,13 @@ public class CalculatorServiceImplTest {
     @Test
     public void GivenSum_WhenValuesAndPorcentageExist_ShouldReturnException() {
         // Arrange
-        double a = 1.0;
-        double b = 2.0;
-        ResultCalculatorDTO expectedResult = new ResultCalculatorDTO(3.0);
-
+        double a = 10.0;
+        double b = 20.0;
+        ExternalPorcentage porcentage = new ExternalPorcentage(10D);
+        ResultCalculatorDTO expectedResult = new ResultCalculatorDTO((a + b) * (porcentage.getPorcentage() / 100));
+        when(expRepository.findTopByOrderByIdDesc()).thenReturn(porcentage);
+        
         // Act
-        calculator.updatePorcentage();
         ResultCalculatorDTO result;
 		try {
 			result = calculator.sum(a, b);

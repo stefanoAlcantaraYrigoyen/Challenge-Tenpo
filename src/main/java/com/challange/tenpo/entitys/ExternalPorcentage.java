@@ -20,6 +20,10 @@ public class ExternalPorcentage {
 		this.porcentage = porcentage;
 	}
 
+	public ExternalPorcentage() {
+		super();
+	}
+	
 	public Long getId() {
 		return id;
 	}

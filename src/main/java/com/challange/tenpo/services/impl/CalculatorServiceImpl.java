@@ -6,10 +6,12 @@ import com.challange.tenpo.exceptions.NotPorcentageApiExcenption;
 import com.challange.tenpo.repositories.ExternalPorcentageRepository;
 import com.challange.tenpo.services.CalculatorService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import static com.challange.tenpo.config.Consts.API_PORCENTAGE_NOT_FOUND;
 import org.springframework.web.client.RestTemplate;
+
+import static com.challange.tenpo.config.Consts.API_PORCENTAGE_NOT_FOUND;
 
 @Service
 public class CalculatorServiceImpl implements CalculatorService{
@@ -18,7 +20,11 @@ public class CalculatorServiceImpl implements CalculatorService{
 	
 	private ExternalPorcentageRepository expRepository;
 	
+	@Autowired
+	private RestTemplate restTemplate;
+	
     public CalculatorServiceImpl(ExternalPorcentageRepository exp) {
+    	super();
     	expRepository = exp;
 	}
 
@@ -29,17 +35,28 @@ public class CalculatorServiceImpl implements CalculatorService{
     		throw new NotPorcentageApiExcenption(API_PORCENTAGE_NOT_FOUND);
     	}
         log.info("[Log] Processing Sum: {} + {} + {} porcentege of the result", num1, num2, porcentage);
-        Double result = (num1 + num2) * (porcentage.getPorcentage() / 100);
-        return new ResultCalculatorDTO(result);
+        Double porcent = (num1 + num2) * (porcentage.getPorcentage() / 100);
+        Double result = num1 + num2;
+        return new ResultCalculatorDTO(result + porcent);
     }
 
 	@Override
 	public void updatePorcentage() {
-		String uri = "http://localhost:8080/tenpo/calculator/porcentage";
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<Double> value = restTemplate.getForEntity(uri, Double.class);
-		ExternalPorcentage porcentage = new ExternalPorcentage(value.getBody());
-		expRepository.save(porcentage);
+		String url = "http://localhost:8080/tenpo/calculator/porcentage";
+		ResponseEntity<ExternalPorcentage> result = restTemplate.getForEntity(url, ExternalPorcentage.class);
+		if(result == null || result.getBody() == null) {
+			ExternalPorcentage porcentage = new ExternalPorcentage();
+			porcentage.setPorcentage(10D);
+			expRepository.save(porcentage);
+		}else {
+			expRepository.save(result.getBody());
+		}
 	}
 
+	@Override
+	public ExternalPorcentage forceUpdatePorcentage() {
+		ExternalPorcentage porcentage = new ExternalPorcentage();
+		porcentage.setPorcentage(10D);
+		return expRepository.save(porcentage);
+	}
 }

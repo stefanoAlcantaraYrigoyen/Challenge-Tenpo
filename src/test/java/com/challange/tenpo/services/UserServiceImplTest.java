@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -71,7 +72,7 @@ public class UserServiceImplTest {
         User userToSave = new User(TESTS_USERNAME, TESTS_PASSWORD, TESTS_MAIL);
         UserDTO userDTO = new UserDTO(TESTS_USERNAME, TESTS_PASSWORD, TESTS_MAIL);
         when(encoder.encode(TESTS_PASSWORD)).thenReturn(TESTS_PASSWORD);
-        when(repository.save(userToSave)).thenReturn(userToSave);
+        when(repository.save(any())).thenReturn(userToSave);
 
         // Act
         User user = service.registerUser(userDTO);
