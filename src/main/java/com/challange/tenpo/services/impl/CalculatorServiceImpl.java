@@ -42,15 +42,16 @@ public class CalculatorServiceImpl implements CalculatorService{
 
 	@Override
 	public void updatePorcentage() {
-		String url = "http://localhost:8080/tenpo/calculator/porcentage";
-		ResponseEntity<ExternalPorcentage> result = restTemplate.getForEntity(url, ExternalPorcentage.class);
-		if(result == null || result.getBody() == null) {
-			ExternalPorcentage porcentage = new ExternalPorcentage();
-			porcentage.setPorcentage(10D);
-			expRepository.save(porcentage);
-		}else {
-			expRepository.save(result.getBody());
-		}
+//		String url = "http://localhost:8080/api/porcentage";
+//		ResponseEntity<ExternalPorcentage> result = restTemplate.getForEntity(url, ExternalPorcentage.class);
+//		if(result == null || result.getBody() == null) {
+//			ExternalPorcentage porcentage = new ExternalPorcentage();
+//			porcentage.setPorcentage(10D);
+//			expRepository.save(porcentage);
+//		}else {
+//			expRepository.save(result.getBody());
+//		}
+		forceUpdatePorcentage();
 	}
 
 	@Override
